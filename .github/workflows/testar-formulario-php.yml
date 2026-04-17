@@ -1,0 +1,37 @@
+# .github/workflows/testar-formulario-php.yml
+name: Testar Formulário PHP
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Iniciar servidor PHP
+        run: |
+          php -S 127.0.0.1:8000 &
+          # espera o servidor subir
+          sleep 3
+
+      - name: Testar envio do formulário
+        run: |
+          # Envia dados como se fosse o formulário
+          RESPONSE=$(curl -X POST \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            -d "nome=Jo%C3%A3o+Silva&email=joao%40teste.com&telefone=%2811%29+99999-0000" \
+            http://127.0.0.1:8000/index.php)
+
+          # Verifica se a resposta contém os dados esperados
+          echo "$RESPONSE" | grep -q "Nome:.*João Silva" &&
+          echo "$RESPONSE" | grep -q "E-mail:.*joao@teste.com" &&
+          echo "$RESPONSE" | grep -q "Telefone:.*(11) 99999-0000" ||
+          { echo "❌ Formulário PHP não retornou dados esperados"; exit 1; }
+
+          echo "✅ Teste passou"
