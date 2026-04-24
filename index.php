@@ -54,7 +54,9 @@ $resultLista = pg_query($conn, $queryLista);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
   <title>Sistema Web II - Cadastro de Usuário</title>
+
 </head>
 <body>
   <div class="container">
